@@ -17,6 +17,7 @@ const BULLET_STORE = [];
 const HERO_SIZE = ENEMIES_SIZE;
 const HERO_COLOR = 'grey';
 let shooting = false;
+let enemies_missed_counter = 0;
 
 let lost = false;
 let score = 0;
@@ -235,8 +236,7 @@ const collisionChecker = () => {
   ENEMIES_STORE.forEach(enemy => {
     if (ourHero.checkCollision(enemy)) {
       lost = true;
-      ENEMIES_STORE.splice(0, ENEMIES_STORE.length-1)
-      
+      ENEMIES_STORE.splice(0, ENEMIES_STORE.length-1)      
       setTimeout(function(){
         gameOver();
       },1000)
@@ -259,11 +259,12 @@ const enemyGotHit = () => {
 
 }
 
-//Out of Canvas chexker. 
+//Out of Canvas checker. 
 const outOfCanvasChecker = () => {
   ENEMIES_STORE.forEach(enemy => {
     if (enemy.y > 500){
       ENEMIES_STORE.shift();
+      enemies_missed_counter += 1;
     }
   })
 }
@@ -380,7 +381,10 @@ const gameOver = () => {
   ctx.fillStyle = "red";
   ctx.fillText(RESTART_TEXT, GAME_OVER_X-55, GAME_OVER_Y+30);
   ctx.fillStyle = 'white';
-  ctx.fillText("Enemies missed: " + ENEMIES_STORE.length, GAME_OVER_X-20, GAME_OVER_Y+60)
+  ctx.fillText("Enemies missed: " + enemies_missed_counter + " " +  " total enemies: " + (enemies_missed_counter + score),
+  GAME_OVER_X-115, GAME_OVER_Y+60)
+  ctx.fillStyle = score_color;
+  ctx.fillText("Enemies shot: " + score, GAME_OVER_X-10, GAME_OVER_Y+90);
 
   resetGlobalVariables();
 }
@@ -395,6 +399,8 @@ const resetGlobalVariables = () => {
   score = 0;
   stage =1;
   frames = 1;
+  ENEMIES_STORE.splice(0,ENEMIES_STORE.length-1);
+  BULLET_STORE.splice(0, BULLET_STORE.length-1)
 }
 
 // Starting looper.
