@@ -10,5 +10,6 @@ body {
 
 canvas {
   margin-top: 50px;
-  background-color: black;
+  background-image: url("img/space-background");
+  background-size: cover;
 }
